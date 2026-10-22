@@ -1,7 +1,5 @@
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
-import LogInModal from 'flarum/forum/components/LogInModal';
-import SettingsPage from 'flarum/forum/components/SettingsPage';
 import Button from 'flarum/common/components/Button';
 import PasskeysSettings from './components/PasskeysSettings';
 import { decodeRequestOptions, serializeAssertionCredential, isUserCancellation } from './utils/webauthn';
@@ -41,6 +39,14 @@ async function loginWithPasskey(): Promise<void> {
 }
 
 app.initializers.add('cengizkemec-passkeys', () => {
+  const LogInModal = flarum.reg.get('core', 'forum/components/LogInModal');
+  const SettingsPage = flarum.reg.get('core', 'forum/components/SettingsPage');
+
+  if (!LogInModal || !SettingsPage) {
+    console.error('cengizkemec-passkeys: Required components not found');
+    return;
+  }
+
   extend(LogInModal.prototype, 'fields', function (items) {
     if (!app.forum.attribute('passkeysEnabled')) return;
 
