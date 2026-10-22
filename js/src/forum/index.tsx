@@ -39,15 +39,7 @@ async function loginWithPasskey(): Promise<void> {
 }
 
 app.initializers.add('cengizkemec-passkeys', () => {
-  const LogInModal = flarum.reg.get('core', 'forum/components/LogInModal');
-  const SettingsPage = flarum.reg.get('core', 'forum/components/SettingsPage');
-
-  if (!LogInModal || !SettingsPage) {
-    console.error('cengizkemec-passkeys: Required components not found');
-    return;
-  }
-
-  extend(LogInModal.prototype, 'fields', function (items) {
+  extend('flarum/forum/components/LogInModal', 'fields', function (items) {
     if (!app.forum.attribute('passkeysEnabled')) return;
 
     items.add(
@@ -61,7 +53,7 @@ app.initializers.add('cengizkemec-passkeys', () => {
     );
   });
 
-  extend(SettingsPage.prototype, 'accountItems', function (items) {
+  extend('flarum/forum/components/SettingsPage', 'accountItems', function (items) {
     if (!app.session.user || !app.forum.attribute('passkeysEnabled')) return;
 
     items.add('passkeys', <PasskeysSettings />, 50);
