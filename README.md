@@ -25,10 +25,9 @@ Biometric data never leaves the user's device. The server only receives and stor
 
 ## Installation
 
-The package is not published on Packagist. Add this repository as a VCS repository and require it:
+The package is available on [Packagist](https://packagist.org/packages/cengizkemec/passkeys):
 
 ```bash
-composer config repositories.passkeys vcs https://github.com/cengizkemec/flarum-passkeys.git
 composer require cengizkemec/passkeys:^0.1.0
 ```
 
