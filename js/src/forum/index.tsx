@@ -39,17 +39,15 @@ async function loginWithPasskey(): Promise<void> {
 }
 
 app.initializers.add('cengizkemec-passkeys', () => {
-  extend('flarum/forum/components/LogInModal', 'fields', function (items) {
+  extend('flarum/forum/components/LogInButtons', 'items', function (items) {
     if (!app.forum.attribute('passkeysEnabled')) return;
 
     items.add(
-      'passkey-login',
-      <div className="Form-group">
-        <Button className="Button Button--block PasskeyLoginButton" icon="fas fa-key" onclick={() => loginWithPasskey()}>
-          {app.translator.trans('cengizkemec-passkeys.forum.log_in.with_passkey')}
-        </Button>
-      </div>,
-      5
+      'passkey',
+      <Button className="Button LogInButton LogInButton--passkey" icon="fas fa-key" onclick={() => loginWithPasskey()}>
+        {app.translator.trans('cengizkemec-passkeys.forum.log_in.with_passkey')}
+      </Button>,
+      -10
     );
   });
 
