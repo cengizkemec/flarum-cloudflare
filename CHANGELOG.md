@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2026-10-22
+
+First stable release.
+
+- Production-ready passkey registration and usernameless login.
+- Verified WebAuthn registration and assertion flows, including invalid signature and user-handle rejection.
+- Credential management, admin settings, locales, and compiled frontend assets.
+- Published on Packagist with automatic GitHub updates.
+
 ## [0.1.0] - 2026-10-22
 
 Initial public release.

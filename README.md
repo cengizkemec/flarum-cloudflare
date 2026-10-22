@@ -28,7 +28,7 @@ Biometric data never leaves the user's device. The server only receives and stor
 The package is available on [Packagist](https://packagist.org/packages/cengizkemec/passkeys):
 
 ```bash
-composer require cengizkemec/passkeys:^0.1.0
+composer require cengizkemec/passkeys:^1.0.0
 ```
 
 Then enable **Passkeys** in the Flarum admin panel.
