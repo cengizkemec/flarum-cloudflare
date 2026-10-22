@@ -29,7 +29,7 @@ The package is not published on Packagist. Add this repository as a VCS reposito
 
 ```bash
 composer config repositories.passkeys vcs https://github.com/cengizkemec/flarum-passkeys.git
-composer require cengizkemec/passkeys:dev-main
+composer require cengizkemec/passkeys:^0.1.0
 ```
 
 Then enable **Passkeys** in the Flarum admin panel.
