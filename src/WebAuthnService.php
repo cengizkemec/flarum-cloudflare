@@ -212,7 +212,7 @@ class WebAuthnService
             'none',
             EmptyTrustPath::create(),
             $aaguid,
-            $credential->public_key,
+            base64_decode($credential->public_key),
             $this->getUserHandle($user),
             (int) $credential->counter
         );

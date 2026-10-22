@@ -90,7 +90,7 @@ class RegistrationVerifyController implements RequestHandlerInterface
         $credential = $existing ?? new WebAuthnCredential();
         $credential->user_id = $actor->id;
         $credential->credential_id = $credentialId;
-        $credential->public_key = $record->credentialPublicKey;
+        $credential->public_key = base64_encode($record->credentialPublicKey);
         $credential->counter = (int) $record->counter;
         $credential->aaguid = $record->aaguid->toRfc4122();
         $credential->transports = $record->transports !== [] ? json_encode(array_values($record->transports)) : null;
