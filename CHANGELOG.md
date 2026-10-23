@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-10-23
+
+Feature release adding SSL/TLS and HTTP protocol settings management.
+
+### Added
+- SSL/TLS mode (Off, Flexible, Full, Full Strict)
+- Always Use HTTPS
+- Minimum TLS Version
+- TLS 1.3 with 0-RTT
+- Automatic HTTPS Rewrites
+- HTTP/2 and HTTP/3
+- 0-RTT Connection Resumption
+- Early Hints
+- Opportunistic Encryption
+- Apply all settings to Cloudflare with one button
+- English and Turkish localization
+
 ## [1.1.0] - 2026-10-23
 
 Feature release adding Cloudflare zone settings management from the Flarum admin panel.
