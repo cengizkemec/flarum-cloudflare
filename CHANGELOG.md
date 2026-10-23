@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.6] - 2026-10-23
+
+Patch release returning detailed Cloudflare API error messages.
+
+### Fixed
+- Test Connection now shows detailed error messages (token, zone, permission issues).
+- All API responses return HTTP 200 with success/message fields for clearer feedback.
+
 ## [1.2.5] - 2026-10-23
 
 Patch release fixing 400 errors by using the running app instance.
