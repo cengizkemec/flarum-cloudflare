@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2026-10-23
+
+Patch release to refresh Packagist metadata after the Cloudflare conversion.
+
+### Changed
+- Bumped version to 1.0.1 to work around Packagist cached metadata.
+- Updated package and lockfile metadata.
+
 ## [1.0.0] - 2026-10-23
 
 Initial release of the Cloudflare API integration extension for Flarum 2.0.
