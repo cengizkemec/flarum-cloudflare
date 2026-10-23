@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@cengizkemec/cloudflare",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "type": "module",
   "devDependencies": {
     "flarum-tsconfig": "^2.0.0",

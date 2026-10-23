@@ -245,8 +245,8 @@ export default [
           className: 'Button',
           onclick: () => {
             app.request({ method: 'POST', url: '/cloudflare/test' })
-              .then((d: any) => alert(d.success ? 'Cloudflare connection successful.' : (d.message || 'Connection failed.')))
-              .catch((e: any) => alert('Connection test failed: ' + (e?.message || e)));
+              .then((d: any) => app.alerts.show({ type: d.success ? 'success' : 'error' }, d.success ? 'Cloudflare connection successful.' : (d.message || 'Connection failed.')))
+              .catch((e: any) => app.alerts.show({ type: 'error' }, 'Connection test failed: ' + (e?.message || e)));
           },
         }, 'Test Connection'),
         m('button', {
@@ -254,8 +254,8 @@ export default [
           className: 'Button Button--primary',
           onclick: () => {
             app.request({ method: 'POST', url: '/cloudflare/apply' })
-              .then((d: any) => alert(d.success ? 'Settings applied to Cloudflare.' : (d.message || 'Failed to apply settings.')))
-              .catch((e: any) => alert('Failed to apply settings: ' + (e?.message || e)));
+              .then((d: any) => app.alerts.show({ type: d.success ? 'success' : 'error' }, d.success ? 'Settings applied to Cloudflare.' : (d.message || 'Failed to apply settings.')))
+              .catch((e: any) => app.alerts.show({ type: 'error' }, 'Failed to apply settings: ' + (e?.message || e)));
           },
         }, 'Apply Settings to Cloudflare'),
         m('button', {
@@ -263,8 +263,8 @@ export default [
           className: 'Button',
           onclick: () => {
             app.request({ method: 'POST', url: '/cloudflare/purge' })
-              .then((d: any) => alert(d.success ? 'Cache purged.' : (d.message || 'Failed to purge cache.')))
-              .catch((e: any) => alert('Failed to purge cache: ' + (e?.message || e)));
+              .then((d: any) => app.alerts.show({ type: d.success ? 'success' : 'error' }, d.success ? 'Cache purged.' : (d.message || 'Failed to purge cache.')))
+              .catch((e: any) => app.alerts.show({ type: 'error' }, 'Failed to purge cache: ' + (e?.message || e)));
           },
         }, 'Purge Cache'),
       ]),
