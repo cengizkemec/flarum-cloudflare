@@ -1,13 +1,13 @@
 {
-  "name": "cengizkemec/passkeys",
-  "description": "Passkey (WebAuthn/FIDO2) authentication for Flarum 2.0",
+  "name": "cengizkemec/cloudflare",
+  "description": "Cloudflare API integration for Flarum 2.0",
   "type": "flarum-extension",
-  "keywords": ["flarum", "extension", "webauthn", "passkey", "fido2"],
+  "keywords": ["flarum", "extension", "cloudflare", "cache", "api"],
   "license": "MIT",
-  "homepage": "https://github.com/cengizkemec/flarum-passkeys",
+  "homepage": "https://github.com/cengizkemec/flarum-cloudflare",
   "support": {
-    "issues": "https://github.com/cengizkemec/flarum-passkeys/issues",
-    "source": "https://github.com/cengizkemec/flarum-passkeys"
+    "issues": "https://github.com/cengizkemec/flarum-cloudflare/issues",
+    "source": "https://github.com/cengizkemec/flarum-cloudflare"
   },
   "authors": [
     {
@@ -17,20 +17,20 @@
   ],
   "require": {
     "flarum/core": "^2.0.0",
-    "web-auth/webauthn-lib": "^5.3"
+    "guzzlehttp/guzzle": "^7.0"
   },
   "autoload": {
     "psr-4": {
-      "CengizKemec\\Passkeys\\": "src/"
+      "CengizKemec\\Cloudflare\\": "src/"
     }
   },
   "extra": {
     "flarum-extension": {
-      "title": "Passkeys",
-      "category": "feature",
+      "title": "Cloudflare",
+      "category": "integration",
       "icon": {
-        "name": "fas fa-key",
-        "backgroundColor": "#4f46e5",
+        "name": "fas fa-cloud",
+        "backgroundColor": "#f38020",
         "color": "#fff"
       }
     },
@@ -38,5 +38,5 @@
       "discuss": ""
     }
   },
-  "version": "1.1.1"
+  "version": "1.0.0"
 }
