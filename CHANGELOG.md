@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-10-23
+
+Feature release adding Cloudflare zone settings management from the Flarum admin panel.
+
+### Added
+- Manage development mode, Bot Fight Mode, Always Online, Brotli, Rocket Loader, Mirage, minification, security level, Polish, and browser cache TTL.
+- Apply all saved Cloudflare settings to the zone with one button.
+- Purge cache button in the admin panel.
+- English and Turkish localization for all new settings.
+
+### Endpoints
+- POST /cloudflare/apply - Apply saved settings to Cloudflare (admin only).
+
 ## [1.0.1] - 2026-10-23
 
 Patch release to refresh Packagist metadata after the Cloudflare conversion.
