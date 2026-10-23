@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.5] - 2026-10-23
+
+Patch release fixing 400 errors by using the running app instance.
+
+### Fixed
+- Admin API calls now use the running Flarum app instance, ensuring CSRF token and session are correct.
+- Test Connection, Apply Settings, and Purge Cache should work without 400 errors.
+
 ## [1.2.4] - 2026-10-23
 
 Patch release fixing admin API requests by using Flarum's built-in request handler.
