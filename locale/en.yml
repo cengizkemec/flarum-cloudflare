@@ -37,3 +37,23 @@ cengizkemec-cloudflare:
       polish_help: Enable Polish image optimization.
       browser_cache_ttl_label: Browser Cache TTL
       browser_cache_ttl_help: Set the browser cache TTL for the zone.
+      ssl_mode_label: SSL/TLS Mode
+      ssl_mode_help: Set the SSL/TLS encryption mode for the zone.
+      always_use_https_label: Always Use HTTPS
+      always_use_https_help: Redirect all HTTP requests to HTTPS.
+      min_tls_version_label: Minimum TLS Version
+      min_tls_version_help: Set the minimum TLS version for the zone.
+      tls_1_3_label: TLS 1.3
+      tls_1_3_help: Enable TLS 1.3 for the zone.
+      automatic_https_rewrites_label: Automatic HTTPS Rewrites
+      automatic_https_rewrites_help: Automatically rewrite HTTP URLs to HTTPS.
+      http2_label: HTTP/2
+      http2_help: Enable HTTP/2 for the zone.
+      http3_label: HTTP/3
+      http3_help: Enable HTTP/3 (QUIC) for the zone.
+      0rtt_label: 0-RTT Connection Resumption
+      0rtt_help: Enable 0-RTT connection resumption.
+      early_hints_label: Early Hints
+      early_hints_help: Enable Early Hints (103) for the zone.
+      opportunistic_encryption_label: Opportunistic Encryption
+      opportunistic_encryption_help: Enable opportunistic encryption for the zone.

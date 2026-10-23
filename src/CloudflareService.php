@@ -239,6 +239,17 @@ class CloudflareService
             (bool) $settings->get('cloudflare.minify_html', false)
         );
 
+        $results['ssl'] = $this->setSetting('ssl', (string) $settings->get('cloudflare.ssl_mode', 'flexible'));
+        $results['always_use_https'] = $this->setSetting('always_use_https', (bool) $settings->get('cloudflare.always_use_https', false) ? 'on' : 'off');
+        $results['min_tls_version'] = $this->setSetting('min_tls_version', (string) $settings->get('cloudflare.min_tls_version', '1.2'));
+        $results['tls_1_3'] = $this->setSetting('tls_1_3', (string) $settings->get('cloudflare.tls_1_3', 'on'));
+        $results['automatic_https_rewrites'] = $this->setSetting('automatic_https_rewrites', (bool) $settings->get('cloudflare.automatic_https_rewrites', false) ? 'on' : 'off');
+        $results['http2'] = $this->setSetting('http2', (bool) $settings->get('cloudflare.http2', false) ? 'on' : 'off');
+        $results['http3'] = $this->setSetting('http3', (bool) $settings->get('cloudflare.http3', false) ? 'on' : 'off');
+        $results['0rtt'] = $this->setSetting('0rtt', (bool) $settings->get('cloudflare.0rtt', false) ? 'on' : 'off');
+        $results['early_hints'] = $this->setSetting('early_hints', (bool) $settings->get('cloudflare.early_hints', false) ? 'on' : 'off');
+        $results['opportunistic_encryption'] = $this->setSetting('opportunistic_encryption', (bool) $settings->get('cloudflare.opportunistic_encryption', false) ? 'on' : 'off');
+
         return $results;
     }
 }

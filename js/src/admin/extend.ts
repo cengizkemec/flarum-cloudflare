@@ -151,6 +151,86 @@ export default [
       default: '14400',
     }))
     .setting(() => ({
+      setting: 'cloudflare.ssl_mode',
+      type: 'select',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.ssl_mode_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.ssl_mode_help'),
+      options: {
+        off: 'Off',
+        flexible: 'Flexible',
+        full: 'Full',
+        strict: 'Full (Strict)',
+      },
+      default: 'flexible',
+    }))
+    .setting(() => ({
+      setting: 'cloudflare.always_use_https',
+      type: 'bool',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.always_use_https_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.always_use_https_help'),
+    }))
+    .setting(() => ({
+      setting: 'cloudflare.min_tls_version',
+      type: 'select',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.min_tls_version_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.min_tls_version_help'),
+      options: {
+        '1.0': 'TLS 1.0',
+        '1.1': 'TLS 1.1',
+        '1.2': 'TLS 1.2',
+        '1.3': 'TLS 1.3',
+      },
+      default: '1.2',
+    }))
+    .setting(() => ({
+      setting: 'cloudflare.tls_1_3',
+      type: 'select',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.tls_1_3_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.tls_1_3_help'),
+      options: {
+        off: 'Off',
+        on: 'On',
+        zrt: 'On + 0-RTT',
+      },
+      default: 'on',
+    }))
+    .setting(() => ({
+      setting: 'cloudflare.automatic_https_rewrites',
+      type: 'bool',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.automatic_https_rewrites_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.automatic_https_rewrites_help'),
+    }))
+    .setting(() => ({
+      setting: 'cloudflare.http2',
+      type: 'bool',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.http2_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.http2_help'),
+    }))
+    .setting(() => ({
+      setting: 'cloudflare.http3',
+      type: 'bool',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.http3_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.http3_help'),
+    }))
+    .setting(() => ({
+      setting: 'cloudflare.0rtt',
+      type: 'bool',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.0rtt_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.0rtt_help'),
+    }))
+    .setting(() => ({
+      setting: 'cloudflare.early_hints',
+      type: 'bool',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.early_hints_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.early_hints_help'),
+    }))
+    .setting(() => ({
+      setting: 'cloudflare.opportunistic_encryption',
+      type: 'bool',
+      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.opportunistic_encryption_label'),
+      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.opportunistic_encryption_help'),
+    }))
+    .setting(() => ({
       setting: 'cloudflare.auto_purge',
       type: 'bool',
       label: app.translator.trans('cengizkemec-cloudflare.admin.settings.auto_purge_label'),

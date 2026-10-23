@@ -35,7 +35,17 @@ return [
         ->default('cloudflare.minify_html', '0')
         ->default('cloudflare.security_level', 'medium')
         ->default('cloudflare.polish', 'off')
-        ->default('cloudflare.browser_cache_ttl', '14400'),
+        ->default('cloudflare.browser_cache_ttl', '14400')
+        ->default('cloudflare.ssl_mode', 'flexible')
+        ->default('cloudflare.always_use_https', '0')
+        ->default('cloudflare.min_tls_version', '1.2')
+        ->default('cloudflare.tls_1_3', 'on')
+        ->default('cloudflare.automatic_https_rewrites', '1')
+        ->default('cloudflare.http2', '1')
+        ->default('cloudflare.http3', '1')
+        ->default('cloudflare.0rtt', '0')
+        ->default('cloudflare.early_hints', '1')
+        ->default('cloudflare.opportunistic_encryption', '1'),
 
     (new Extend\Event())
         ->listen(\Flarum\Discussion\Event\Started::class, PurgeCacheListener::class)
