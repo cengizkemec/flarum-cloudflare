@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.7] - 2026-10-23
+
+Patch release replacing browser alerts with Flarum in-app alerts.
+
+### Changed
+- Test Connection, Apply Settings, and Purge Cache now show notifications inside the Flarum admin panel.
+- No more browser popup alerts.
+
 ## [1.2.6] - 2026-10-23
 
 Patch release returning detailed Cloudflare API error messages.
