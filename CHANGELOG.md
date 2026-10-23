@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-10-23
+
+Patch release adding a Test Connection button to the admin panel.
+
+### Added
+- Test Connection button to verify Cloudflare API credentials.
+- Success/error messages based on API response.
+
 ## [1.2.0] - 2026-10-23
 
 Feature release adding SSL/TLS and HTTP protocol settings management.
