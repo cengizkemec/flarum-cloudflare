@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2026-10-23
+
+Re-published the fixed v1.1.0 code under a new version number because Packagist had cached the old (broken) v1.1.0 commit reference (18cab85). Code is identical to the intended v1.1.0 (string-based extend, LogInButtons, base64 public key storage, passkey sign-up).
+
 ## [1.1.0] - 2026-10-23
 
 - Added passkey-based account creation from the sign-up modal.
