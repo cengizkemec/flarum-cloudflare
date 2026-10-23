@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.4] - 2026-10-23
+
+Patch release fixing admin API requests by using Flarum's built-in request handler.
+
+### Fixed
+- Admin API calls now use Flarum app.request, which handles CSRF and session automatically.
+- Test Connection, Apply Settings, and Purge Cache should work correctly.
+
 ## [1.2.3] - 2026-10-23
 
 Patch release fixing 400 Bad Request on admin API calls.
