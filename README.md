@@ -68,6 +68,10 @@ Open **Admin Panel → Extensions → Cloudflare → Settings** and configure:
 
 Use **Apply Settings to Cloudflare** to push the saved settings to your zone, and **Purge Cache** to clear the cache immediately.
 
+## Documentation
+
+See the full user guide: [docs/GUIDE.md](docs/GUIDE.md)
+
 ## API endpoints
 
 All endpoints require an admin user.
