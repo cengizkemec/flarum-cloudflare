@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2026-10-23
+
+Patch release fixing admin API requests.
+
+### Fixed
+- Admin panel requests now include the CSRF token.
+- Test Connection, Apply Settings, and Purge Cache should work correctly.
+
 ## [1.2.1] - 2026-10-23
 
 Patch release adding a Test Connection button to the admin panel.
