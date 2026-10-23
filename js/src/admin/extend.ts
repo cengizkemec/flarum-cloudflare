@@ -244,30 +244,45 @@ export default [
           type: 'button',
           className: 'Button',
           onclick: () => {
-            fetch('/cloudflare/test', { method: 'POST', credentials: 'same-origin' })
-              .then((r) => r.json())
+            const csrf = (app as any)?.session?.csrfToken || '';
+            fetch('/cloudflare/test', {
+              method: 'POST',
+              credentials: 'same-origin',
+              headers: csrf ? { 'X-CSRF-Token': csrf } : {},
+            })
+              .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
               .then((d) => alert(d.success ? 'Cloudflare connection successful.' : (d.message || 'Connection failed.')))
-              .catch(() => alert('Connection test failed.'));
+              .catch((e) => alert('Connection test failed: ' + e.message));
           },
         }, 'Test Connection'),
         m('button', {
           type: 'button',
           className: 'Button Button--primary',
           onclick: () => {
-            fetch('/cloudflare/apply', { method: 'POST', credentials: 'same-origin' })
-              .then((r) => r.json())
+            const csrf = (app as any)?.session?.csrfToken || '';
+            fetch('/cloudflare/apply', {
+              method: 'POST',
+              credentials: 'same-origin',
+              headers: csrf ? { 'X-CSRF-Token': csrf } : {},
+            })
+              .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
               .then((d) => alert(d.success ? 'Settings applied to Cloudflare.' : (d.message || 'Failed to apply settings.')))
-              .catch(() => alert('Failed to apply settings.'));
+              .catch((e) => alert('Failed to apply settings: ' + e.message));
           },
         }, 'Apply Settings to Cloudflare'),
         m('button', {
           type: 'button',
           className: 'Button',
           onclick: () => {
-            fetch('/cloudflare/purge', { method: 'POST', credentials: 'same-origin' })
-              .then((r) => r.json())
+            const csrf = (app as any)?.session?.csrfToken || '';
+            fetch('/cloudflare/purge', {
+              method: 'POST',
+              credentials: 'same-origin',
+              headers: csrf ? { 'X-CSRF-Token': csrf } : {},
+            })
+              .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
               .then((d) => alert(d.success ? 'Cache purged.' : (d.message || 'Failed to purge cache.')))
-              .catch(() => alert('Failed to purge cache.'));
+              .catch((e) => alert('Failed to purge cache: ' + e.message));
           },
         }, 'Purge Cache'),
       ]),
