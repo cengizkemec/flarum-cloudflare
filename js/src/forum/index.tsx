@@ -2,6 +2,7 @@ import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import Button from 'flarum/common/components/Button';
 import PasskeysSettings from './components/PasskeysSettings';
+import PasskeySignUpButton from './components/PasskeySignUpButton';
 import { decodeRequestOptions, serializeAssertionCredential, isUserCancellation } from './utils/webauthn';
 
 export { default as extend } from './extend';
@@ -55,5 +56,18 @@ app.initializers.add('cengizkemec-passkeys', () => {
     if (!app.session.user || !app.forum.attribute('passkeysEnabled')) return;
 
     items.add('passkeys', <PasskeysSettings />, 50);
+  });
+
+  extend('flarum/forum/components/SignUpModal', 'fields', function (items) {
+    if (
+      !app.forum.attribute('passkeysEnabled') ||
+      !app.forum.attribute('passkeysSignupEnabled') ||
+      !app.forum.attribute('allowSignUp') ||
+      this.attrs.token
+    ) {
+      return;
+    }
+
+    items.add('passkey-signup', <PasskeySignUpButton modal={this} />, 5);
   });
 });

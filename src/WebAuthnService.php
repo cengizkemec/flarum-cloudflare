@@ -42,6 +42,13 @@ class WebAuthnService
         return (bool) $this->settings->get('passkeys.enabled', true);
     }
 
+    public function isSignupEnabled(): bool
+    {
+        return $this->isEnabled()
+            && (bool) $this->settings->get('passkeys.signup_enabled', true)
+            && (bool) $this->settings->get('allow_sign_up', true);
+    }
+
     public function getRpName(): string
     {
         $name = trim((string) $this->settings->get('passkeys.rp_name', ''));
@@ -95,6 +102,28 @@ class WebAuthnService
         return pack('N', (int) $user->id);
     }
 
+    /**
+     * The user handle that a credential was created with.
+     *
+     * Credentials created through the account settings use the legacy
+     * `getUserHandle()` value. Credentials created during passkey sign-up use
+     * a random handle generated before the user row exists, so the handle is
+     * stored alongside the credential instead.
+     */
+    public function getCredentialUserHandle(WebAuthnCredential $credential, User $user): string
+    {
+        if (is_string($credential->user_handle) && $credential->user_handle !== '') {
+            return self::base64UrlDecode($credential->user_handle);
+        }
+
+        return $this->getUserHandle($user);
+    }
+
+    public function encodeUserHandle(string $handle): string
+    {
+        return self::base64UrlEncode($handle);
+    }
+
     public function createSerializer(): SerializerInterface
     {
         if ($this->serializer === null) {
@@ -137,6 +166,25 @@ class WebAuthnService
      */
     public function createCreationOptions(User $user, array $excludeCredentials, ServerRequestInterface $request): PublicKeyCredentialCreationOptions
     {
+        return $this->createCreationOptionsForIdentity(
+            $user->username,
+            $user->display_name ?: $user->username,
+            $this->getUserHandle($user),
+            $excludeCredentials,
+            $request
+        );
+    }
+
+    /**
+     * @param PublicKeyCredentialDescriptor[] $excludeCredentials
+     */
+    public function createCreationOptionsForIdentity(
+        string $username,
+        string $displayName,
+        string $userHandle,
+        array $excludeCredentials,
+        ServerRequestInterface $request
+    ): PublicKeyCredentialCreationOptions {
         $selection = AuthenticatorSelectionCriteria::create(
             null,
             AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED,
@@ -146,9 +194,9 @@ class WebAuthnService
         return PublicKeyCredentialCreationOptions::create(
             PublicKeyCredentialRpEntity::create($this->getRpName(), $this->getRpId($request)),
             PublicKeyCredentialUserEntity::create(
-                $user->username,
-                $this->getUserHandle($user),
-                $user->display_name ?: $user->username
+                $username,
+                $userHandle,
+                $displayName
             ),
             random_bytes(32),
             [
@@ -213,7 +261,7 @@ class WebAuthnService
             EmptyTrustPath::create(),
             $aaguid,
             base64_decode($credential->public_key),
-            $this->getUserHandle($user),
+            $this->getCredentialUserHandle($credential, $user),
             (int) $credential->counter
         );
     }
@@ -266,6 +314,41 @@ class WebAuthnService
         }
 
         return $data['options'];
+    }
+
+    public function storeSignupData(ServerRequestInterface $request, array $data): void
+    {
+        $session = $request->getAttribute('session');
+
+        if ($session === null) {
+            throw new \RuntimeException('No session available.');
+        }
+
+        $session->put('passkeys.signup.data', [
+            'data' => $data,
+            'expires_at' => time() + self::CHALLENGE_LIFETIME,
+        ]);
+    }
+
+    public function consumeSignupData(ServerRequestInterface $request): ?array
+    {
+        $session = $request->getAttribute('session');
+
+        if ($session === null) {
+            return null;
+        }
+
+        $data = $session->pull('passkeys.signup.data');
+
+        if (! is_array($data) || ! is_array($data['data'] ?? null)) {
+            return null;
+        }
+
+        if (($data['expires_at'] ?? 0) < time()) {
+            return null;
+        }
+
+        return $data['data'];
     }
 
     public static function base64UrlEncode(string $value): string

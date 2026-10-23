@@ -13,6 +13,7 @@ class WebAuthnCredential extends AbstractModel
 
     protected $fillable = [
         'user_id',
+        'user_handle',
         'credential_id',
         'public_key',
         'counter',

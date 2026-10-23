@@ -9,6 +9,12 @@ export default [
       label: app.translator.trans('cengizkemec-passkeys.admin.settings.enable_label'),
     }))
     .setting(() => ({
+      setting: 'passkeys.signup_enabled',
+      type: 'bool',
+      label: app.translator.trans('cengizkemec-passkeys.admin.settings.signup_enable_label'),
+      help: app.translator.trans('cengizkemec-passkeys.admin.settings.signup_enable_help'),
+    }))
+    .setting(() => ({
       setting: 'passkeys.rp_id',
       type: 'text',
       label: app.translator.trans('cengizkemec-passkeys.admin.settings.rp_id_label'),

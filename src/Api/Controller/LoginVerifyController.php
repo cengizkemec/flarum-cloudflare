@@ -85,7 +85,7 @@ class LoginVerifyController implements RequestHandlerInterface
                 $publicKeyCredential->response,
                 $options,
                 $request->getUri()->getHost(),
-                $this->service->getUserHandle($user)
+                $this->service->getCredentialUserHandle($credential, $user)
             );
         } catch (\Throwable) {
             return new JsonResponse(['error' => 'verification_failed'], 400);
