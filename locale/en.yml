@@ -15,3 +15,25 @@ cengizkemec-cloudflare:
       auto_purge_help: Purge the Cloudflare cache automatically when discussions or posts are created.
       development_mode_label: Development mode
       development_mode_help: Toggle Cloudflare development mode for the zone.
+      bot_fight_mode_label: Bot Fight Mode
+      bot_fight_mode_help: Enable Cloudflare Bot Fight Mode for the zone.
+      always_online_label: Always Online
+      always_online_help: Serve cached pages when the origin is unavailable.
+      brotli_label: Brotli
+      brotli_help: Enable Brotli compression for the zone.
+      rocket_loader_label: Rocket Loader
+      rocket_loader_help: Enable Rocket Loader for JavaScript resources.
+      mirage_label: Mirage
+      mirage_help: Enable Mirage image optimization.
+      minify_js_label: Minify JavaScript
+      minify_js_help: Minify JavaScript files.
+      minify_css_label: Minify CSS
+      minify_css_help: Minify CSS files.
+      minify_html_label: Minify HTML
+      minify_html_help: Minify HTML files.
+      security_level_label: Security Level
+      security_level_help: Set the zone security level.
+      polish_label: Polish
+      polish_help: Enable Polish image optimization.
+      browser_cache_ttl_label: Browser Cache TTL
+      browser_cache_ttl_help: Set the browser cache TTL for the zone.

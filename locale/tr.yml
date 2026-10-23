@@ -15,3 +15,25 @@ cengizkemec-cloudflare:
       auto_purge_help: Tartışma veya ileti oluşturulduğunda Cloudflare önbelleğini otomatik olarak temizler.
       development_mode_label: Geliştirme modu
       development_mode_help: Zone için Cloudflare geliştirme modunu açar veya kapatır.
+      bot_fight_mode_label: Bot Fight Mode
+      bot_fight_mode_help: Zone için Cloudflare Bot Fight Mode'u etkinleştirir.
+      always_online_label: Always Online
+      always_online_help: Kaynak sunucu kullanılamadığında önbellekteki sayfaları sunar.
+      brotli_label: Brotli
+      brotli_help: Zone için Brotli sıkıştırmayı etkinleştirir.
+      rocket_loader_label: Rocket Loader
+      rocket_loader_help: JavaScript kaynakları için Rocket Loader'ı etkinleştirir.
+      mirage_label: Mirage
+      mirage_help: Mirage görüntü optimizasyonunu etkinleştirir.
+      minify_js_label: JavaScript Küçült
+      minify_js_help: JavaScript dosyalarını küçültür.
+      minify_css_label: CSS Küçült
+      minify_css_help: CSS dosyalarını küçültür.
+      minify_html_label: HTML Küçült
+      minify_html_help: HTML dosyalarını küçültür.
+      security_level_label: Güvenlik Seviyesi
+      security_level_help: Zone güvenlik seviyesini ayarlar.
+      polish_label: Polish
+      polish_help: Polish görüntü optimizasyonunu etkinleştirir.
+      browser_cache_ttl_label: Tarayıcı Önbellek TTL
+      browser_cache_ttl_help: Zone için tarayıcı önbellek TTL süresini ayarlar.

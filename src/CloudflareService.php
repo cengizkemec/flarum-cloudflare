@@ -145,7 +145,7 @@ class CloudflareService
     /**
      * @throws \RuntimeException
      */
-    public function setDevelopmentMode(bool $enabled): array
+    public function setSetting(string $id, mixed $value): array
     {
         $zoneId = $this->getZoneId();
 
@@ -153,8 +153,92 @@ class CloudflareService
             throw new \RuntimeException('Cloudflare zone ID is not configured.');
         }
 
-        return $this->request('PATCH', 'zones/' . rawurlencode($zoneId) . '/settings/development_mode', [
-            'value' => $enabled ? 'on' : 'off',
+        return $this->request('PATCH', 'zones/' . rawurlencode($zoneId) . '/settings/' . rawurlencode($id), [
+            'value' => $value,
         ]);
+    }
+
+    public function setDevelopmentMode(bool $enabled): array
+    {
+        return $this->setSetting('development_mode', $enabled ? 'on' : 'off');
+    }
+
+    public function setBotFightMode(bool $enabled): array
+    {
+        return $this->setSetting('bot_fight_mode', $enabled ? 'on' : 'off');
+    }
+
+    public function setAlwaysOnline(bool $enabled): array
+    {
+        return $this->setSetting('always_online', $enabled ? 'on' : 'off');
+    }
+
+    public function setBrotli(bool $enabled): array
+    {
+        return $this->setSetting('brotli', $enabled ? 'on' : 'off');
+    }
+
+    public function setRocketLoader(bool $enabled): array
+    {
+        return $this->setSetting('rocket_loader', $enabled ? 'on' : 'off');
+    }
+
+    public function setMirage(bool $enabled): array
+    {
+        return $this->setSetting('mirage', $enabled ? 'on' : 'off');
+    }
+
+    public function setSecurityLevel(string $level): array
+    {
+        return $this->setSetting('security_level', $level);
+    }
+
+    public function setPolish(string $mode): array
+    {
+        return $this->setSetting('polish', $mode);
+    }
+
+    public function setBrowserCacheTTL(int $seconds): array
+    {
+        return $this->setSetting('browser_cache_ttl', $seconds);
+    }
+
+    /**
+     * @return array{js: array, css: array, html: array}
+     */
+    public function setMinify(bool $js, bool $css, bool $html): array
+    {
+        return $this->setSetting('minify', [
+            'js' => $js ? 'on' : 'off',
+            'css' => $css ? 'on' : 'off',
+            'html' => $html ? 'on' : 'off',
+        ]);
+    }
+
+    /**
+     * Apply all configured settings to Cloudflare.
+     *
+     * @return array<string, array|string>
+     */
+    public function applySettings(\Flarum\Settings\SettingsRepositoryInterface $settings): array
+    {
+        $results = [];
+
+        $results['development_mode'] = $this->setDevelopmentMode((bool) $settings->get('cloudflare.development_mode', false));
+        $results['bot_fight_mode'] = $this->setBotFightMode((bool) $settings->get('cloudflare.bot_fight_mode', false));
+        $results['always_online'] = $this->setAlwaysOnline((bool) $settings->get('cloudflare.always_online', false));
+        $results['brotli'] = $this->setBrotli((bool) $settings->get('cloudflare.brotli', false));
+        $results['rocket_loader'] = $this->setRocketLoader((bool) $settings->get('cloudflare.rocket_loader', false));
+        $results['mirage'] = $this->setMirage((bool) $settings->get('cloudflare.mirage', false));
+        $results['security_level'] = $this->setSecurityLevel((string) $settings->get('cloudflare.security_level', 'medium'));
+        $results['polish'] = $this->setPolish((string) $settings->get('cloudflare.polish', 'off'));
+        $results['browser_cache_ttl'] = $this->setBrowserCacheTTL((int) $settings->get('cloudflare.browser_cache_ttl', 14400));
+        $results['minify'] = $this->setMinify(
+            (bool) $settings->get('cloudflare.minify_js', false),
+            (bool) $settings->get('cloudflare.minify_css', false),
+            (bool) $settings->get('cloudflare.minify_html', false)
+        );
+
+        return $results;
     }
 }

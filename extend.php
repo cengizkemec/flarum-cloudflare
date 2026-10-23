@@ -1,5 +1,6 @@
 <?php
 
+use CengizKemec\Cloudflare\Api\Controller\ApplySettingsController;
 use CengizKemec\Cloudflare\Api\Controller\PurgeCacheController;
 use CengizKemec\Cloudflare\Api\Controller\TestConnectionController;
 use CengizKemec\Cloudflare\Listener\PurgeCacheListener;
@@ -13,7 +14,8 @@ return [
 
     (new Extend\Routes('forum'))
         ->post('/cloudflare/test', 'cloudflare.test', TestConnectionController::class)
-        ->post('/cloudflare/purge', 'cloudflare.purge', PurgeCacheController::class),
+        ->post('/cloudflare/purge', 'cloudflare.purge', PurgeCacheController::class)
+        ->post('/cloudflare/apply', 'cloudflare.apply', ApplySettingsController::class),
 
     (new Extend\Settings())
         ->default('cloudflare.enabled', '0')
@@ -22,7 +24,18 @@ return [
         ->default('cloudflare.zone_id', '')
         ->default('cloudflare.zone_name', '')
         ->default('cloudflare.auto_purge', '0')
-        ->default('cloudflare.development_mode', '0'),
+        ->default('cloudflare.development_mode', '0')
+        ->default('cloudflare.bot_fight_mode', '0')
+        ->default('cloudflare.always_online', '0')
+        ->default('cloudflare.brotli', '0')
+        ->default('cloudflare.rocket_loader', '0')
+        ->default('cloudflare.mirage', '0')
+        ->default('cloudflare.minify_js', '0')
+        ->default('cloudflare.minify_css', '0')
+        ->default('cloudflare.minify_html', '0')
+        ->default('cloudflare.security_level', 'medium')
+        ->default('cloudflare.polish', 'off')
+        ->default('cloudflare.browser_cache_ttl', '14400'),
 
     (new Extend\Event())
         ->listen(\Flarum\Discussion\Event\Started::class, PurgeCacheListener::class)
