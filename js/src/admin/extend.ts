@@ -244,11 +244,13 @@ export default [
           type: 'button',
           className: 'Button',
           onclick: () => {
-            const csrf = (app as any)?.session?.csrfToken || '';
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            const csrfToken = meta ? meta.getAttribute('content') || '' : '';
+            const csrf = csrfToken || (app as any)?.session?.csrfToken || '';
             fetch('/cloudflare/test', {
               method: 'POST',
               credentials: 'same-origin',
-              headers: csrf ? { 'X-CSRF-Token': csrf } : {},
+              headers: Object.assign(csrf ? { 'X-CSRF-Token': csrf } : {}, { 'X-Requested-With': 'XMLHttpRequest' }),
             })
               .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
               .then((d) => alert(d.success ? 'Cloudflare connection successful.' : (d.message || 'Connection failed.')))
@@ -259,11 +261,13 @@ export default [
           type: 'button',
           className: 'Button Button--primary',
           onclick: () => {
-            const csrf = (app as any)?.session?.csrfToken || '';
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            const csrfToken = meta ? meta.getAttribute('content') || '' : '';
+            const csrf = csrfToken || (app as any)?.session?.csrfToken || '';
             fetch('/cloudflare/apply', {
               method: 'POST',
               credentials: 'same-origin',
-              headers: csrf ? { 'X-CSRF-Token': csrf } : {},
+              headers: Object.assign(csrf ? { 'X-CSRF-Token': csrf } : {}, { 'X-Requested-With': 'XMLHttpRequest' }),
             })
               .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
               .then((d) => alert(d.success ? 'Settings applied to Cloudflare.' : (d.message || 'Failed to apply settings.')))
@@ -274,11 +278,13 @@ export default [
           type: 'button',
           className: 'Button',
           onclick: () => {
-            const csrf = (app as any)?.session?.csrfToken || '';
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            const csrfToken = meta ? meta.getAttribute('content') || '' : '';
+            const csrf = csrfToken || (app as any)?.session?.csrfToken || '';
             fetch('/cloudflare/purge', {
               method: 'POST',
               credentials: 'same-origin',
-              headers: csrf ? { 'X-CSRF-Token': csrf } : {},
+              headers: Object.assign(csrf ? { 'X-CSRF-Token': csrf } : {}, { 'X-Requested-With': 'XMLHttpRequest' }),
             })
               .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
               .then((d) => alert(d.success ? 'Cache purged.' : (d.message || 'Failed to purge cache.')))
