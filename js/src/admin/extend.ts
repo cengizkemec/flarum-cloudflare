@@ -244,51 +244,27 @@ export default [
           type: 'button',
           className: 'Button',
           onclick: () => {
-            const meta = document.querySelector('meta[name="csrf-token"]');
-            const csrfToken = meta ? meta.getAttribute('content') || '' : '';
-            const csrf = csrfToken || (app as any)?.session?.csrfToken || '';
-            fetch('/cloudflare/test', {
-              method: 'POST',
-              credentials: 'same-origin',
-              headers: Object.assign(csrf ? { 'X-CSRF-Token': csrf } : {}, { 'X-Requested-With': 'XMLHttpRequest' }),
-            })
-              .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-              .then((d) => alert(d.success ? 'Cloudflare connection successful.' : (d.message || 'Connection failed.')))
-              .catch((e) => alert('Connection test failed: ' + e.message));
+            app.request({ method: 'POST', url: '/cloudflare/test' })
+              .then((d: any) => alert(d.success ? 'Cloudflare connection successful.' : (d.message || 'Connection failed.')))
+              .catch((e: any) => alert('Connection test failed: ' + (e?.message || e)));
           },
         }, 'Test Connection'),
         m('button', {
           type: 'button',
           className: 'Button Button--primary',
           onclick: () => {
-            const meta = document.querySelector('meta[name="csrf-token"]');
-            const csrfToken = meta ? meta.getAttribute('content') || '' : '';
-            const csrf = csrfToken || (app as any)?.session?.csrfToken || '';
-            fetch('/cloudflare/apply', {
-              method: 'POST',
-              credentials: 'same-origin',
-              headers: Object.assign(csrf ? { 'X-CSRF-Token': csrf } : {}, { 'X-Requested-With': 'XMLHttpRequest' }),
-            })
-              .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-              .then((d) => alert(d.success ? 'Settings applied to Cloudflare.' : (d.message || 'Failed to apply settings.')))
-              .catch((e) => alert('Failed to apply settings: ' + e.message));
+            app.request({ method: 'POST', url: '/cloudflare/apply' })
+              .then((d: any) => alert(d.success ? 'Settings applied to Cloudflare.' : (d.message || 'Failed to apply settings.')))
+              .catch((e: any) => alert('Failed to apply settings: ' + (e?.message || e)));
           },
         }, 'Apply Settings to Cloudflare'),
         m('button', {
           type: 'button',
           className: 'Button',
           onclick: () => {
-            const meta = document.querySelector('meta[name="csrf-token"]');
-            const csrfToken = meta ? meta.getAttribute('content') || '' : '';
-            const csrf = csrfToken || (app as any)?.session?.csrfToken || '';
-            fetch('/cloudflare/purge', {
-              method: 'POST',
-              credentials: 'same-origin',
-              headers: Object.assign(csrf ? { 'X-CSRF-Token': csrf } : {}, { 'X-Requested-With': 'XMLHttpRequest' }),
-            })
-              .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-              .then((d) => alert(d.success ? 'Cache purged.' : (d.message || 'Failed to purge cache.')))
-              .catch((e) => alert('Failed to purge cache: ' + e.message));
+            app.request({ method: 'POST', url: '/cloudflare/purge' })
+              .then((d: any) => alert(d.success ? 'Cache purged.' : (d.message || 'Failed to purge cache.')))
+              .catch((e: any) => alert('Failed to purge cache: ' + (e?.message || e)));
           },
         }, 'Purge Cache'),
       ]),

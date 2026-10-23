@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2026-10-23
+
+Patch release fixing 400 Bad Request on admin API calls.
+
+### Fixed
+- CSRF token is now read from the page meta tag.
+- Added X-Requested-With header to all admin API requests.
+- Test Connection, Apply Settings, and Purge Cache should work without 400 errors.
+
 ## [1.2.2] - 2026-10-23
 
 Patch release fixing admin API requests.
