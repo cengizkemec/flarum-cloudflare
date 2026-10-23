@@ -239,7 +239,17 @@ export default [
     .customSetting(() => m('div', { className: 'Form-group Cloudflare-actions' }, [
       m('label', { className: 'control-label' }, 'Cloudflare Actions'),
       m('div', { className: 'helpText' }, 'Apply the saved settings to Cloudflare or purge the cache.'),
-      m('div', { style: { display: 'flex', gap: '8px', marginTop: '8px' } }, [
+      m('div', { style: { display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' } }, [
+        m('button', {
+          type: 'button',
+          className: 'Button',
+          onclick: () => {
+            fetch('/cloudflare/test', { method: 'POST', credentials: 'same-origin' })
+              .then((r) => r.json())
+              .then((d) => alert(d.success ? 'Cloudflare connection successful.' : (d.message || 'Connection failed.')))
+              .catch(() => alert('Connection test failed.'));
+          },
+        }, 'Test Connection'),
         m('button', {
           type: 'button',
           className: 'Button Button--primary',
