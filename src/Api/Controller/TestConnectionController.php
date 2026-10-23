@@ -25,24 +25,37 @@ class TestConnectionController implements RequestHandlerInterface
         $actor = RequestUtil::getActor($request);
         $actor->assertAdmin();
 
+        $result = [
+            'success' => false,
+            'token' => null,
+            'zone' => null,
+            'message' => null,
+        ];
+
         try {
             $token = $this->cloudflare->verifyToken();
-            $zone = null;
-
-            if ($this->cloudflare->getZoneId() !== '') {
-                $zone = $this->cloudflare->getZone();
-            }
-
-            return new JsonResponse([
-                'success' => true,
-                'token' => $token['result'] ?? null,
-                'zone' => $zone['result'] ?? null,
-            ]);
+            $result['token'] = $token['result'] ?? null;
+            $result['success'] = true;
         } catch (\Throwable $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 422);
+            $result['message'] = 'Token verification failed: ' . $e->getMessage();
+            return new JsonResponse($result, 200);
         }
+
+        if ($this->cloudflare->getZoneId() !== '') {
+            try {
+                $zone = $this->cloudflare->getZone();
+                $result['zone'] = $zone['result'] ?? null;
+            } catch (\Throwable $e) {
+                $result['success'] = false;
+                $result['message'] = 'Zone lookup failed: ' . $e->getMessage();
+                return new JsonResponse($result, 200);
+            }
+        }
+
+        if ($result['message'] === null) {
+            $result['message'] = 'Cloudflare connection successful.';
+        }
+
+        return new JsonResponse($result, 200);
     }
 }

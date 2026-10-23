@@ -40,7 +40,7 @@ class PurgeCacheController implements RequestHandlerInterface
             return new JsonResponse([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], 422);
+            ], 200);
         }
     }
 }
