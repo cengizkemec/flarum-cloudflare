@@ -38,6 +38,13 @@ Open **Admin Panel → Extensions → Cloudflare → Settings** and fill in:
 
 Then configure the optional features:
 
+- **Purge cache automatically**: Purge cache on new discussions/posts.
+
+  > **WARNING — high-impact setting.** When enabled, every new discussion or post
+  > clears the **entire** Cloudflare cache. On an active forum this nearly disables
+  > caching and slows down posting. The admin panel shows a strict warning and asks
+  > for explicit confirmation before this can be enabled; it ships **off** by default.
+
 - **Development mode**: Enable Cloudflare development mode.
 - **Bot Fight Mode**: Block automated traffic.
 - **Always Online**: Serve cached pages when the origin is down.
@@ -120,6 +127,11 @@ Admin Panel → Eklentiler → Cloudflare → Ayarlar:
 - Polish
 - Browser Cache TTL
 - Otomatik purge
+
+  > **UYARI — yüksek etkili bir ayardır.** Açıldığında her yeni tartışma veya ileti
+  > Cloudflare önbelleğinin **tamamını** temizler; aktif forumlarda önbelleğe alma
+  > neredeyse devre dışı kalır ve ileti göndermek yavaşlar. Yönetim paneli, açılmadan
+  > önce sıkı bir uyarı ve açık onay ister; varsayılan olarak **kapalı** gelir.
 - SSL/TLS modu
 - Always Use HTTPS
 - Minimum TLS sürümü

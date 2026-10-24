@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.8] - 2026-10-24
+
+Maintenance release with code review fixes, security hardening, and a strict confirmation for automatic purging.
+
+### Fixed
+- Fixed a broken admin JS build: `mithril` was missing from the JS dev dependencies, so `npm run build` failed. The bundle was rebuilt.
+- Cloudflare 4xx/5xx responses no longer lose their detailed error message; the real API error (e.g. "Invalid API Token") is now surfaced. Added a 5s connect timeout.
+- `Apply Settings to Cloudflare` no longer aborts on the first failure: every setting is applied independently and failures are reported per setting. The admin panel shows a partial-apply warning listing how many settings failed.
+- File purge requests are sanitized (trimmed, de-duplicated) and sent in batches of at most 30 URLs, matching the Cloudflare API limit.
+- Rejecting an invalid or empty `files` payload no longer silently turns into a purge-everything request.
+- Corrected the wrong `setMinify` docblock.
+- Composer requirements aligned with Flarum 2.x core: PHP `^8.3`, Guzzle `^7.7`.
+
+### Added
+- Automatic purge now ships with a strict, non-dismissible warning in the admin panel and requires an explicit confirmation dialog (acknowledgment checkbox required) before it can be enabled. It remains **off by default**.
+- Admin action buttons are translated (EN/TR), guarded against double submits, and partial apply failures are shown as warnings.
+- New English/Turkish translation keys for actions, alerts, and the automatic purge confirmation.
+
 ## [1.2.7] - 2026-10-23
 
 Patch release replacing browser alerts with Flarum in-app alerts.
