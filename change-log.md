@@ -4,6 +4,33 @@ Forum-ready release notes. **Newest entry at the top.**
 
 ---
 
+## v1.2.10 – 2026-10-24
+
+**Cloudflare for Flarum v1.2.10** is a documentation release.
+
+After the 1.2.9 update some sites (including warthunder.tr) briefly saw the admin panel fail to load with `app.load is not a function` / `literal not terminated before end of script`.
+
+Investigation confirmed:
+- The extension’s own `js/dist/admin.js` is syntactically valid.
+- The error came from a truncated (half-delivered) concatenated admin bundle served by the browser/CDN at that moment.
+- Flarum concatenates all extensions’ admin JS into one file; one broken/truncated file takes the whole panel down.
+
+The build process added in 1.2.9 already validates every dist JS file so this repository cannot ship a parse-broken asset again.
+
+If you still see the problem after updating:
+1. Hard-refresh / clear browser cache.
+2. Purge Cloudflare (or other CDN) cache for `/assets/admin*.js`.
+3. Run `php flarum cache:clear`.
+
+No code changes. Fully compatible with previous 1.2.x installs.
+
+```bash
+composer update cengizkemec/cloudflare
+php flarum cache:clear
+```
+
+---
+
 ## v1.2.8 – 2026-10-24
 
 Hello everyone! 👋
