@@ -26,11 +26,13 @@ class ApplySettingsController implements RequestHandlerInterface
         $actor->assertAdmin();
 
         try {
-            $results = $this->cloudflare->applySettings($this->settings);
+            ['results' => $results, 'errors' => $errors] = $this->cloudflare->applySettings($this->settings);
 
             return new JsonResponse([
-                'success' => true,
+                'success' => $errors === [],
                 'results' => $results,
+                'errors' => $errors,
+                'message' => $errors === [] ? null : reset($errors),
             ]);
         } catch (\Throwable $e) {
             return new JsonResponse([

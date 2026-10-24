@@ -17,6 +17,9 @@ class CloudflareService
         $this->client = new Client([
             'base_uri' => 'https://api.cloudflare.com/client/v4/',
             'timeout' => 20,
+            'connect_timeout' => 5,
+            // Do not throw on 4xx/5xx so Cloudflare's JSON error body can be decoded.
+            'http_errors' => false,
         ]);
     }
 
@@ -86,7 +89,7 @@ class CloudflareService
         $decoded = json_decode((string) $response->getBody(), true);
 
         if (! is_array($decoded)) {
-            throw new \RuntimeException('Invalid response from Cloudflare.');
+            throw new \RuntimeException('Invalid response from Cloudflare (HTTP ' . $response->getStatusCode() . ').');
         }
 
         if (($decoded['success'] ?? false) !== true) {
@@ -124,6 +127,9 @@ class CloudflareService
     }
 
     /**
+     * Purge the zone cache. Without arguments, purges everything. Otherwise,
+     * purges the given file URLs in batches of at most 30 (Cloudflare API limit).
+     *
      * @param string[] $files
      * @throws \RuntimeException
      */
@@ -135,11 +141,28 @@ class CloudflareService
             throw new \RuntimeException('Cloudflare zone ID is not configured.');
         }
 
-        $payload = empty($files)
-            ? ['purge_everything' => true]
-            : ['files' => array_values($files)];
+        $path = 'zones/' . rawurlencode($zoneId) . '/purge_cache';
 
-        return $this->request('POST', 'zones/' . rawurlencode($zoneId) . '/purge_cache', $payload);
+        if (empty($files)) {
+            return $this->request('POST', $path, ['purge_everything' => true]);
+        }
+
+        $files = array_values(array_unique(array_filter(array_map(
+            static fn ($file) => is_string($file) ? trim($file) : '',
+            $files
+        ), static fn (string $file) => $file !== '')));
+
+        if ($files === []) {
+            throw new \RuntimeException('No valid file URLs were provided for purging.');
+        }
+
+        $result = [];
+
+        foreach (array_chunk($files, 30) as $chunk) {
+            $result = $this->request('POST', $path, ['files' => $chunk]);
+        }
+
+        return $result;
     }
 
     /**
@@ -204,7 +227,7 @@ class CloudflareService
     }
 
     /**
-     * @return array{js: array, css: array, html: array}
+     * @throws \RuntimeException
      */
     public function setMinify(bool $js, bool $css, bool $html): array
     {
@@ -218,38 +241,50 @@ class CloudflareService
     /**
      * Apply all configured settings to Cloudflare.
      *
-     * @return array<string, array|string>
+     * Each setting is applied independently: a failure in one setting does not
+     * prevent the remaining settings from being applied.
+     *
+     * @return array{results: array<string, mixed>, errors: array<string, string>}
      */
-    public function applySettings(\Flarum\Settings\SettingsRepositoryInterface $settings): array
+    public function applySettings(SettingsRepositoryInterface $settings): array
     {
         $results = [];
+        $errors = [];
 
-        $results['development_mode'] = $this->setDevelopmentMode((bool) $settings->get('cloudflare.development_mode', false));
-        $results['bot_fight_mode'] = $this->setBotFightMode((bool) $settings->get('cloudflare.bot_fight_mode', false));
-        $results['always_online'] = $this->setAlwaysOnline((bool) $settings->get('cloudflare.always_online', false));
-        $results['brotli'] = $this->setBrotli((bool) $settings->get('cloudflare.brotli', false));
-        $results['rocket_loader'] = $this->setRocketLoader((bool) $settings->get('cloudflare.rocket_loader', false));
-        $results['mirage'] = $this->setMirage((bool) $settings->get('cloudflare.mirage', false));
-        $results['security_level'] = $this->setSecurityLevel((string) $settings->get('cloudflare.security_level', 'medium'));
-        $results['polish'] = $this->setPolish((string) $settings->get('cloudflare.polish', 'off'));
-        $results['browser_cache_ttl'] = $this->setBrowserCacheTTL((int) $settings->get('cloudflare.browser_cache_ttl', 14400));
-        $results['minify'] = $this->setMinify(
+        $apply = function (string $key, \Closure $action) use (&$results, &$errors): void {
+            try {
+                $results[$key] = $action();
+            } catch (\Throwable $e) {
+                $errors[$key] = $e->getMessage();
+            }
+        };
+
+        $apply('development_mode', fn (): array => $this->setDevelopmentMode((bool) $settings->get('cloudflare.development_mode', false)));
+        $apply('bot_fight_mode', fn (): array => $this->setBotFightMode((bool) $settings->get('cloudflare.bot_fight_mode', false)));
+        $apply('always_online', fn (): array => $this->setAlwaysOnline((bool) $settings->get('cloudflare.always_online', false)));
+        $apply('brotli', fn (): array => $this->setBrotli((bool) $settings->get('cloudflare.brotli', false)));
+        $apply('rocket_loader', fn (): array => $this->setRocketLoader((bool) $settings->get('cloudflare.rocket_loader', false)));
+        $apply('mirage', fn (): array => $this->setMirage((bool) $settings->get('cloudflare.mirage', false)));
+        $apply('security_level', fn (): array => $this->setSecurityLevel((string) $settings->get('cloudflare.security_level', 'medium')));
+        $apply('polish', fn (): array => $this->setPolish((string) $settings->get('cloudflare.polish', 'off')));
+        $apply('browser_cache_ttl', fn (): array => $this->setBrowserCacheTTL((int) $settings->get('cloudflare.browser_cache_ttl', 14400)));
+        $apply('minify', fn (): array => $this->setMinify(
             (bool) $settings->get('cloudflare.minify_js', false),
             (bool) $settings->get('cloudflare.minify_css', false),
             (bool) $settings->get('cloudflare.minify_html', false)
-        );
+        ));
 
-        $results['ssl'] = $this->setSetting('ssl', (string) $settings->get('cloudflare.ssl_mode', 'flexible'));
-        $results['always_use_https'] = $this->setSetting('always_use_https', (bool) $settings->get('cloudflare.always_use_https', false) ? 'on' : 'off');
-        $results['min_tls_version'] = $this->setSetting('min_tls_version', (string) $settings->get('cloudflare.min_tls_version', '1.2'));
-        $results['tls_1_3'] = $this->setSetting('tls_1_3', (string) $settings->get('cloudflare.tls_1_3', 'on'));
-        $results['automatic_https_rewrites'] = $this->setSetting('automatic_https_rewrites', (bool) $settings->get('cloudflare.automatic_https_rewrites', false) ? 'on' : 'off');
-        $results['http2'] = $this->setSetting('http2', (bool) $settings->get('cloudflare.http2', false) ? 'on' : 'off');
-        $results['http3'] = $this->setSetting('http3', (bool) $settings->get('cloudflare.http3', false) ? 'on' : 'off');
-        $results['0rtt'] = $this->setSetting('0rtt', (bool) $settings->get('cloudflare.0rtt', false) ? 'on' : 'off');
-        $results['early_hints'] = $this->setSetting('early_hints', (bool) $settings->get('cloudflare.early_hints', false) ? 'on' : 'off');
-        $results['opportunistic_encryption'] = $this->setSetting('opportunistic_encryption', (bool) $settings->get('cloudflare.opportunistic_encryption', false) ? 'on' : 'off');
+        $apply('ssl', fn (): array => $this->setSetting('ssl', (string) $settings->get('cloudflare.ssl_mode', 'flexible')));
+        $apply('always_use_https', fn (): array => $this->setSetting('always_use_https', (bool) $settings->get('cloudflare.always_use_https', false) ? 'on' : 'off'));
+        $apply('min_tls_version', fn (): array => $this->setSetting('min_tls_version', (string) $settings->get('cloudflare.min_tls_version', '1.2')));
+        $apply('tls_1_3', fn (): array => $this->setSetting('tls_1_3', (string) $settings->get('cloudflare.tls_1_3', 'on')));
+        $apply('automatic_https_rewrites', fn (): array => $this->setSetting('automatic_https_rewrites', (bool) $settings->get('cloudflare.automatic_https_rewrites', false) ? 'on' : 'off'));
+        $apply('http2', fn (): array => $this->setSetting('http2', (bool) $settings->get('cloudflare.http2', false) ? 'on' : 'off'));
+        $apply('http3', fn (): array => $this->setSetting('http3', (bool) $settings->get('cloudflare.http3', false) ? 'on' : 'off'));
+        $apply('0rtt', fn (): array => $this->setSetting('0rtt', (bool) $settings->get('cloudflare.0rtt', false) ? 'on' : 'off'));
+        $apply('early_hints', fn (): array => $this->setSetting('early_hints', (bool) $settings->get('cloudflare.early_hints', false) ? 'on' : 'off'));
+        $apply('opportunistic_encryption', fn (): array => $this->setSetting('opportunistic_encryption', (bool) $settings->get('cloudflare.opportunistic_encryption', false) ? 'on' : 'off'));
 
-        return $results;
+        return ['results' => $results, 'errors' => $errors];
     }
 }

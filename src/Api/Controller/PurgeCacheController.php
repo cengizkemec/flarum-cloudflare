@@ -22,15 +22,37 @@ class PurgeCacheController implements RequestHandlerInterface
         $actor = RequestUtil::getActor($request);
         $actor->assertAdmin();
 
-        $body = json_decode((string) $request->getBody(), true);
-        $files = [];
+        $body = $request->getParsedBody();
 
-        if (is_array($body) && isset($body['files']) && is_array($body['files'])) {
-            $files = array_values(array_filter($body['files'], 'is_string'));
+        if (! is_array($body)) {
+            $body = [];
+        }
+
+        $files = null;
+
+        if (array_key_exists('files', $body)) {
+            if (! is_array($body['files'])) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'The files field must be an array of URLs.',
+                ]);
+            }
+
+            $files = array_values(array_unique(array_filter(array_map(
+                static fn ($file) => is_string($file) ? trim($file) : '',
+                $body['files']
+            ), static fn (string $file) => $file !== '')));
+
+            if ($files === []) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'No valid file URLs were provided for purging.',
+                ]);
+            }
         }
 
         try {
-            $result = $this->cloudflare->purgeCache($files);
+            $result = $this->cloudflare->purgeCache($files ?? []);
 
             return new JsonResponse([
                 'success' => true,

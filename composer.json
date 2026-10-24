@@ -16,8 +16,9 @@
     }
   ],
   "require": {
+    "php": "^8.3",
     "flarum/core": "^2.0.0",
-    "guzzlehttp/guzzle": "^7.0"
+    "guzzlehttp/guzzle": "^7.7"
   },
   "autoload": {
     "psr-4": {
@@ -38,5 +39,5 @@
       "discuss": ""
     }
   },
-  "version": "1.2.7"
+  "version": "1.2.8"
 }
