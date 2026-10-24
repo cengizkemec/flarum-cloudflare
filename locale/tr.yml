@@ -13,6 +13,16 @@ cengizkemec-cloudflare:
       zone_name_help: Zone'un alan adı (referans için).
       auto_purge_label: Önbelleği otomatik temizle
       auto_purge_help: Tartışma veya ileti oluşturulduğunda Cloudflare önbelleğini otomatik olarak temizler.
+      auto_purge_warning: "YÜKSEK RİSK: açıkken HER yeni tartışma ve ileti, Cloudflare'e 'tümünü temizle' isteği gönderir. Aktif bir forumda bu, önbelleğe almayı neredeyse tamamen devre dışı bırakır ve ileti göndermeyi belirgin şekilde yavaşlatabilir. Etkisini tam olarak anlamıyorsanız etkinleştirmeyin."
+      auto_purge_active: "Otomatik temizlik ŞU ANDA AÇIK: her yeni tartışma veya ileti zone önbelleğinin TAMAMINI temizler. Siteniz yavaşlıyorsa veya kaynak sunucu yükü artıyorsa kapatın."
+      auto_purge_confirm_title: Otomatik önbellek temizliği etkinleştirilsin mi?
+      auto_purge_confirm_text: "UYARI — yüksek etkili bir ayardır. Etkinleştirildiğinde her yeni tartışma veya ileti, Cloudflare zone'unuzun TÜM önbelleğini temizler."
+      auto_purge_consequence_cache: Önbellek isabet oranınız keskin düşer — sayfaların çoğu kaynak sunucunuzdan önbelleğe alınmamış olarak sunulur.
+      auto_purge_consequence_speed: İleti göndermek yavaşlar — temizleme isteği kaydetme sırasında eşzamanlı çalışır.
+      auto_purge_consequence_recommend: "Önerilen alternatif — bunu kapalı tutun ve gerektiğinde manuel \"Önbelleği Temizle\" düğmesini kullanın."
+      auto_purge_confirm_ack: Bu sonuçları anlıyorum ve performans etkisini kabul ediyorum.
+      auto_purge_confirm_cancel: Vazgeç
+      auto_purge_confirm_enable: Yine de Etkinleştir
       development_mode_label: Geliştirme modu
       development_mode_help: Zone için Cloudflare geliştirme modunu açar veya kapatır.
       bot_fight_mode_label: Bot Fight Mode
@@ -57,3 +67,15 @@ cengizkemec-cloudflare:
       early_hints_help: Zone için Early Hints (103) özelliğini etkinleştirir.
       opportunistic_encryption_label: Fırsatçı Şifreleme
       opportunistic_encryption_help: Zone için fırsatçı şifrelemeyi etkinleştirir.
+      actions_label: Cloudflare işlemleri
+      actions_help: Kaydedilen ayarları Cloudflare'a uygular veya önbelleği temizler.
+      test_connection: Bağlantıyı Test Et
+      apply_settings: Ayarları Cloudflare'a Uygula
+      purge_cache: Önbelleği Temizle
+      test_success: Cloudflare bağlantısı başarılı.
+      test_failed: Bağlantı testi başarısız oldu.
+      apply_success: Ayarlar Cloudflare'a uygulandı.
+      apply_partial: Bazı ayarlar uygulanamadı.
+      apply_failed: Ayarlar uygulanamadı.
+      purge_success: Önbellek temizlendi.
+      purge_failed: Önbellek temizlenemedi.

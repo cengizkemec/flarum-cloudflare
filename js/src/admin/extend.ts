@@ -1,6 +1,38 @@
 import app from 'flarum/admin/app';
 import m from 'mithril';
 import Extend from 'flarum/common/extenders';
+import AutoPurgeSetting from './components/AutoPurgeSetting';
+import trans from './helpers';
+
+let actionBusy = false;
+
+function requestErrorText(e: any): string {
+  const detail = e?.response?.errors?.[0]?.detail;
+
+  if (typeof detail === 'string' && detail !== '') return detail;
+
+  const text = typeof e?.responseText === 'string' ? e.responseText : typeof e?.message === 'string' ? e.message : String(e);
+
+  return text.slice(0, 200);
+}
+
+function runCloudflareAction(url: string, then: (d: any) => void, errorKey: string): void {
+  if (actionBusy) return;
+
+  actionBusy = true;
+
+  app.request({ method: 'POST', url })
+    .then((d: any) => {
+      actionBusy = false;
+      m.redraw();
+      then(d);
+    })
+    .catch((e: any) => {
+      actionBusy = false;
+      m.redraw();
+      app.alerts.show({ type: 'error' }, `${trans(errorKey)} ${requestErrorText(e)}`.trim());
+    });
+}
 
 export default [
   new Extend.Admin()
@@ -230,43 +262,71 @@ export default [
       label: app.translator.trans('cengizkemec-cloudflare.admin.settings.opportunistic_encryption_label'),
       help: app.translator.trans('cengizkemec-cloudflare.admin.settings.opportunistic_encryption_help'),
     }))
-    .setting(() => ({
-      setting: 'cloudflare.auto_purge',
-      type: 'bool',
-      label: app.translator.trans('cengizkemec-cloudflare.admin.settings.auto_purge_label'),
-      help: app.translator.trans('cengizkemec-cloudflare.admin.settings.auto_purge_help'),
-    }))
+    .customSetting(function (this: any) {
+      return m(AutoPurgeSetting, {
+        stream: this.setting('cloudflare.auto_purge', '0'),
+      });
+    })
     .customSetting(() => m('div', { className: 'Form-group Cloudflare-actions' }, [
-      m('label', { className: 'control-label' }, 'Cloudflare Actions'),
-      m('div', { className: 'helpText' }, 'Apply the saved settings to Cloudflare or purge the cache.'),
+      m('label', { className: 'control-label' }, trans('actions_label')),
+      m('div', { className: 'helpText' }, trans('actions_help')),
       m('div', { style: { display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' } }, [
         m('button', {
           type: 'button',
           className: 'Button',
+          disabled: actionBusy,
           onclick: () => {
-            app.request({ method: 'POST', url: '/cloudflare/test' })
-              .then((d: any) => app.alerts.show({ type: d.success ? 'success' : 'error' }, d.success ? 'Cloudflare connection successful.' : (d.message || 'Connection failed.')))
-              .catch((e: any) => app.alerts.show({ type: 'error' }, 'Connection test failed: ' + (e?.message || e)));
+            runCloudflareAction(
+              '/cloudflare/test',
+              (d) => {
+                if (d.success) {
+                  app.alerts.show({ type: 'success' }, trans('test_success'));
+                } else {
+                  app.alerts.show({ type: 'error' }, `${trans('test_failed')} ${String(d.message ?? '')}`.trim());
+                }
+              },
+              'test_failed'
+            );
           },
-        }, 'Test Connection'),
+        }, trans('test_connection')),
         m('button', {
           type: 'button',
           className: 'Button Button--primary',
+          disabled: actionBusy,
           onclick: () => {
-            app.request({ method: 'POST', url: '/cloudflare/apply' })
-              .then((d: any) => app.alerts.show({ type: d.success ? 'success' : 'error' }, d.success ? 'Settings applied to Cloudflare.' : (d.message || 'Failed to apply settings.')))
-              .catch((e: any) => app.alerts.show({ type: 'error' }, 'Failed to apply settings: ' + (e?.message || e)));
+            runCloudflareAction(
+              '/cloudflare/apply',
+              (d) => {
+                const failed = d.errors ? Object.keys(d.errors).length : 0;
+
+                if (failed === 0) {
+                  app.alerts.show({ type: 'success' }, trans('apply_success'));
+                } else {
+                  app.alerts.show({ type: 'error' }, `${trans('apply_partial')} (${failed}) ${String(d.message ?? '')}`.trim());
+                }
+              },
+              'apply_failed'
+            );
           },
-        }, 'Apply Settings to Cloudflare'),
+        }, trans('apply_settings')),
         m('button', {
           type: 'button',
           className: 'Button',
+          disabled: actionBusy,
           onclick: () => {
-            app.request({ method: 'POST', url: '/cloudflare/purge' })
-              .then((d: any) => app.alerts.show({ type: d.success ? 'success' : 'error' }, d.success ? 'Cache purged.' : (d.message || 'Failed to purge cache.')))
-              .catch((e: any) => app.alerts.show({ type: 'error' }, 'Failed to purge cache: ' + (e?.message || e)));
+            runCloudflareAction(
+              '/cloudflare/purge',
+              (d) => {
+                if (d.success) {
+                  app.alerts.show({ type: 'success' }, trans('purge_success'));
+                } else {
+                  app.alerts.show({ type: 'error' }, `${trans('purge_failed')} ${String(d.message ?? '')}`.trim());
+                }
+              },
+              'purge_failed'
+            );
           },
-        }, 'Purge Cache'),
+        }, trans('purge_cache')),
       ]),
     ])),
 ];
