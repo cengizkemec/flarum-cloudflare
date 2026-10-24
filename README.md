@@ -74,6 +74,19 @@ Use **Apply Settings to Cloudflare** to push the saved settings to your zone, an
 
 **Purge cache automatically** is disabled by default. When enabled, every new discussion or post sends a *purge-everything* request to Cloudflare, which on an active forum nearly disables caching and makes posting slower. The admin panel shows a strict warning and opens a confirmation dialog that must be acknowledged before this setting can be turned on. Prefer the manual **Purge Cache** button unless you fully understand the impact.
 
+## Troubleshooting
+
+### Admin panel fails to load after an update (`app.load is not a function`)
+
+Flarum concatenates every extension’s admin JavaScript into a single `admin.js` (and translations into `admin-*.js`). A truncated or half-delivered file from the CDN/browser causes a syntax error that takes the whole admin panel down.
+
+- Hard-refresh the page (Ctrl+Shift+R / Cmd+Shift+R).
+- Clear the browser cache for the site.
+- If you use Cloudflare (or another CDN) in front of the forum, purge the cache for `/assets/admin.js` and `/assets/admin-*.js`.
+- Run `php flarum cache:clear` on the server.
+
+This extension validates its own `js/dist/*.js` on every build (since 1.2.9) so it cannot ship a parse-broken file. The incident observed on warthunder.tr was caused by a transient truncated asset delivery, not by a defect in the extension source.
+
 ## Documentation
 
 See the full user guide: [docs/GUIDE.md](docs/GUIDE.md)

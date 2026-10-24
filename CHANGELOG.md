@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.10] - 2026-10-24
+
+Documentation and confirmation release following a transient admin panel outage on warthunder.tr.
+
+### Notes
+- Investigated the report of a broken admin panel (`app.load is not a function` / `literal not terminated before end of script`) after updating this extension.
+- Verified that both `js/dist/admin.js` and the published assets are syntactically valid (`node --check` / `vm.Script` clean). The coordinates mentioned in the error (admin.js:492:32420 and admin-tr.js) match the concatenated Flarum admin bundle, not a broken file from this extension. Our contribution is at a different offset and the translation catalog is complete.
+- Root cause: At the time of the failure the browser / CDN served a truncated (half-cut) copy of the concatenated `admin.js` and `admin-tr.js`. A single unterminated string literal in the combined bundle prevents the entire admin panel from booting. This is a known characteristic of Flarum’s concat-style admin assets.
+- The build hardening added in 1.2.9 (syntax validation of every `dist/*.js` before the build is considered successful) prevents this repository from ever shipping a parse-broken file again.
+- Assets were regenerated around 18:49 UTC and are currently healthy. If the admin panel still fails to load after an update, clear the browser cache, hard-refresh, and (if applicable) purge the Cloudflare cache for the `/assets/admin*.js` files.
+
+No functional code changes. Existing installations remain fully compatible.
+
 ## [1.2.9] - 2026-10-24
 
 Build hardening release: this extension can never ship a parse-broken admin JS again.
