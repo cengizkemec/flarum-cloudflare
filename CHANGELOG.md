@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.9] - 2026-10-24
+
+Build hardening release: this extension can never ship a parse-broken admin JS again.
+
+### Added
+- `npm run build` now syntax-validates every `dist/*.js` output and fails the build on broken output. In Flarum's concatenated admin bundle a single parse-broken file takes the entire admin panel down (`app.load is not a function`), so a broken dist can never be committed or published from this repo.
+- New `npm run check` runs the same validation standalone (e.g. before pushing a release).
+
 ## [1.2.8] - 2026-10-24
 
 Maintenance release with code review fixes, security hardening, and a strict confirmation for automatic purging.
